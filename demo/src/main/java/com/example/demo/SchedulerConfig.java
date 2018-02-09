@@ -5,6 +5,7 @@ import java.util.Properties;
 
 import org.quartz.Scheduler;
 import org.quartz.ee.servlet.QuartzInitializerListener;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,11 +14,16 @@ import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 
 @Configuration
 public class SchedulerConfig {
+	
+	@Autowired
+    private MyJobFactory myJobFactory;
 
     @Bean(name="SchedulerFactory")
     public SchedulerFactoryBean schedulerFactoryBean() throws IOException {
         SchedulerFactoryBean factory = new SchedulerFactoryBean();
         factory.setQuartzProperties(quartzProperties());
+        // 自定义Job Factory，用于Spring注入
+        factory.setJobFactory(myJobFactory);
         return factory;
     }
 
